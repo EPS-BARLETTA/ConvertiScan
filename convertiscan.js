@@ -18,20 +18,14 @@ document.addEventListener("DOMContentLoaded",()=>{
     const r2=compute(v2.t200,v2.t400,v2.t600,v2.t800);
     if(!r1.ok||!r2.ok){alert((r1.err||r2.err)||"Complète correctement les 2 courses.");return;}
 
-    // Build strings so that splits appear INSIDE the visible Temps 800 columns
-    const c1 = `${r1.fmt.TFIN} | 200:${r1.fmt.S200} 400:${r1.fmt.S400} 600:${r1.fmt.S600}`;
-    const c2 = `${r2.fmt.TFIN} | 200:${r2.fmt.S200} 400:${r2.fmt.S400} 600:${r2.fmt.S600}`;
+    const course1 = `800:${r1.fmt.TFIN} | 200:${r1.fmt.S200} 400:${r1.fmt.S400} 600:${r1.fmt.S600}`;
+    const course2 = `800:${r2.fmt.TFIN} | 200:${r2.fmt.S200} 400:${r2.fmt.S400} 600:${r2.fmt.S600}`;
 
-    const payload = {
-      nom, prenom, classe,
-      // These two fields are the ones ScanProf shows for you.
-      temps_800_c1: c1,
-      temps_800_c2: c2
-    };
+    const payload = { nom, prenom, classe, course1, course2 };
 
     const el=document.getElementById("qrONE"); el.innerHTML="";
     new QRCode(el,{text:JSON.stringify(payload),width:280,height:280,correctLevel:QRCode.CorrectLevel.L});
-    document.getElementById("qrHint").textContent="✅ QR généré : splits intégrés dans temps_800_c1 / temps_800_c2.";
+    document.getElementById("qrHint").textContent="✅ QR généré : 2 colonnes (course1 / course2)";
     const preview=document.getElementById("jsonPreview"); if(preview){preview.textContent=JSON.stringify(payload,null,2); preview.style.display="block";}
   }, {passive:true});
 });
