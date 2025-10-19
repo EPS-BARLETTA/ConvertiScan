@@ -61,24 +61,34 @@ function computeSplits(t200c, t400c, t600c, t800c) {
     fmt: { S200: fmtTime(S200), S400: fmtTime(S400), S600: fmtTime(S600), TFIN: fmtTime(TFIN) }
   };
 }
-const LS = 'convertiscan.v5';
+const LS = 'convertiscan.v6';
 function saveId(id){ localStorage.setItem(LS+'.id', JSON.stringify(id)); }
 function loadId(){ try{return JSON.parse(localStorage.getItem(LS+'.id')||'{}')}catch{return {}} }
 
-// ------- SEUL QR avec 2 courses (flat fields) -------
-function buildOneQR({ nom, prenom, classe, c1, c2 }) {
+// ------- SEUL QR avec 2 courses (flat fields + txt lisible) -------
+function buildOneQR({ nom, prenom, classe, c1, c2, c1fmt, c2fmt }) {
   return {
     nom: (nom||'').toUpperCase().trim(),
     prenom: (prenom||'').trim(),
     classe: normalizeClasse(classe),
-    split200_1: Number(c1.S200.toFixed(2)),
-    split400_1: Number(c1.S400.toFixed(2)),
-    split600_1: Number(c1.S600.toFixed(2)),
-    temps800_1: Number(c1.TFIN.toFixed(2)),
-    split200_2: Number(c2.S200.toFixed(2)),
-    split400_2: Number(c2.S400.toFixed(2)),
-    split600_2: Number(c2.S600.toFixed(2)),
-    temps800_2: Number(c2.TFIN.toFixed(2))
+    // Course 1 (sec + txt)
+    split_200_c1: Number(c1.S200.toFixed(2)),
+    split_400_c1: Number(c1.S400.toFixed(2)),
+    split_600_c1: Number(c1.S600.toFixed(2)),
+    temps_800_c1: Number(c1.TFIN.toFixed(2)),
+    split_200_c1_txt: c1fmt.S200,
+    split_400_c1_txt: c1fmt.S400,
+    split_600_c1_txt: c1fmt.S600,
+    temps_800_c1_txt: c1fmt.TFIN,
+    // Course 2 (sec + txt)
+    split_200_c2: Number(c2.S200.toFixed(2)),
+    split_400_c2: Number(c2.S400.toFixed(2)),
+    split_600_c2: Number(c2.S600.toFixed(2)),
+    temps_800_c2: Number(c2.TFIN.toFixed(2)),
+    split_200_c2_txt: c2fmt.S200,
+    split_400_c2_txt: c2fmt.S400,
+    split_600_c2_txt: c2fmt.S600,
+    temps_800_c2_txt: c2fmt.TFIN
   };
 }
 function makeQR(containerId, payload){
@@ -128,6 +138,8 @@ document.addEventListener('DOMContentLoaded',()=>{
   live('c1','c1_out'); live('c2','c2_out');
 
   const makeBtn = document.getElementById('makeOneQR');
+  const copyBtn = document.getElementById('copyJson');
+  const preview = document.getElementById('jsonPreview');
   if(makeBtn) makeBtn.addEventListener('click',()=>{
     const id = getId();
     if(!id.nom||!id.prenom||!id.classe) { alert('Complète nom, prénom, classe.'); return; }
@@ -136,9 +148,17 @@ document.addEventListener('DOMContentLoaded',()=>{
     const r1 = computeSplits(v1.t200,v1.t400,v1.t600,v1.t800);
     const r2 = computeSplits(v2.t200,v2.t400,v2.t600,v2.t800);
     if(!r1.valid || !r2.valid) { alert((r1.error||r2.error)||'Complète correctement les 2 courses.'); return; }
-    const rec = buildOneQR({ nom:id.nom, prenom:id.prenom, classe:id.classe, c1:r1.splits, c2:r2.splits });
+    const rec = buildOneQR({ nom:id.nom, prenom:id.prenom, classe:id.classe, c1:r1.splits, c2:r2.splits, c1fmt:r1.fmt, c2fmt:r2.fmt });
     makeQR('qrONE', rec);
     const hint = document.getElementById('qrHint');
-    if(hint) hint.textContent = '✅ QR généré avec succès (1 élève / 2 courses).';
+    if(hint) hint.textContent = '✅ QR généré (1 élève / 2 courses : splits + textes lisibles).';
+    if(preview){ preview.textContent = JSON.stringify(rec, null, 2); preview.style.display='block'; }
   }, { passive: true });
+
+  if(copyBtn) copyBtn.addEventListener('click', async ()=>{
+    const txt = document.getElementById('jsonPreview')?.textContent || '';
+    if(!txt) { alert('Rien à copier — génère d’abord le QR.'); return; }
+    try { await navigator.clipboard.writeText(txt); alert('JSON copié dans le presse-papier.'); }
+    catch{ alert('Impossible de copier automatiquement. Sélectionne et copie manuellement.'); }
+  });
 });

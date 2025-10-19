@@ -1,15 +1,14 @@
-# ConvertiScan (v5 – 1 QR pour 2 courses)
+# ConvertiScan (v6 – 1 QR avec 2 courses, détails exploitables)
 
-- Accueil **centré**.
-- **1 élève** avec **2 courses** (Course 1 & Course 2).
-- **UN SEUL QR** contenant les deux séries de splits, via des **champs à plat** :  
-  `nom`, `prenom`, `classe`,  
-  `split200_1`, `split400_1`, `split600_1`, `temps800_1`,  
-  `split200_2`, `split400_2`, `split600_2`, `temps800_2`.
-- Saisie flexible : `48`, `1:48`, `1'48`, `108`, `1:48.5`, etc. → tout est converti en **secondes** (nombres).
+- **1 QR unique** pour **2 courses** (même élève).
+- Champs **plats** pour ScanProf :
+  - `nom`, `prenom`, `classe`
+  - `split_200_c1`, `split_400_c1`, `split_600_c1`, `temps_800_c1`
+  - `split_200_c2`, `split_400_c2`, `split_600_c2`, `temps_800_c2`
+- Et **en plus**, des champs lisibles **mm:ss** :
+  - `split_200_c1_txt`, ..., `temps_800_c2_txt`
+
+Les durées numériques sont en **secondes** (ex. 48, 224).
 
 ## Déploiement
 Pousse les fichiers à la racine du dépôt et active GitHub Pages.
-
-## Notes ScanProf
-Le QR encode un **JSON direct** (non compressé). Les champs sont à plat pour que ScanProf les lise comme de simples colonnes.

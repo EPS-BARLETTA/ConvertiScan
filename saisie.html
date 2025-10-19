@@ -72,14 +72,13 @@
     </form>
 
     <section class="card center">
-      <button class="btn yellow big" type="button" id="makeOneQR">🧾 Générer 1 QR (2 courses)</button>
+      <div class="buttons" style="justify-content:center">
+        <button class="btn yellow big" type="button" id="makeOneQR">🧾 Générer 1 QR (2 courses)</button>
+        <button class="btn" type="button" id="copyJson">📋 Copier JSON</button>
+      </div>
       <div id="qrONE" class="qrbox" style="justify-content:center"></div>
       <div class="muted" id="qrHint"></div>
-    </section>
-
-    <section class="card">
-      <div class="muted">Astuce</div>
-      <p>À l’écran : <strong>mm:ss</strong>. Dans le QR : <strong>secondes numériques</strong> (ex. 48 → 48, 3:44 → 224).</p>
+      <pre id="jsonPreview" style="text-align:left;white-space:pre-wrap;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:10px;padding:10px;display:none;"></pre>
     </section>
   </main>
 

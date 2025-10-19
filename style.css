@@ -34,3 +34,4 @@ html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font:16px/1.
 .qrbox{display:flex;gap:16px;flex-wrap:wrap;margin-top:10px}
 .home .home-center{min-height:calc(100vh - 100px);display:grid;place-items:center}
 .brand{margin:0 0 8px 0; font-size:40px; font-weight:900}
+pre{font-size:12px}
