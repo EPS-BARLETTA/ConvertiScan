@@ -5,8 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>ConvertiScan — Saisie</title>
   <link rel="stylesheet" href="style.css">
-  <script src="vendor/qrcode.min.js"></script>
-  <script>if(!window.QRCode){document.write('<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"><\/script>')}</script>
+  <!-- Local QR library (no CDN needed) -->
+  <script src="vendor/qrcode.min.js" defer></script>
+  <script src="convertiscan.js" defer></script>
 </head>
 <body>
   <main class="wrap">
@@ -18,9 +19,9 @@
     <section class="card">
       <h2>Identité élève</h2>
       <div class="grid-3">
-        <div class="row"><label>Nom (MAJ)</label><input name="nom" placeholder="DURAND"></div>
-        <div class="row"><label>Prénom</label><input name="prenom" placeholder="Camille"></div>
-        <div class="row"><label>Classe</label><input name="classe" placeholder="4eB / 4B / 4èmeB"></div>
+        <div class="row"><label>Nom (MAJ)</label><input name="nom" placeholder="DURAND" autocomplete="off" autocapitalize="characters"></div>
+        <div class="row"><label>Prénom</label><input name="prenom" placeholder="Camille" autocomplete="off"></div>
+        <div class="row"><label>Classe</label><input name="classe" placeholder="4eB / 4B / 4èmeB" autocomplete="off"></div>
       </div>
     </section>
 
@@ -56,6 +57,5 @@
     </section>
   </main>
   <footer class="footer">ConvertiScan — Équipe EPS Lycée Vauban — LUXEMBOURG — JB</footer>
-  <script src="convertiscan.js"></script>
 </body>
 </html>
