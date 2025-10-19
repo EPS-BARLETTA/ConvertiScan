@@ -11,3 +11,4 @@
 .grid-3{display:grid;grid-template-columns:1fr;gap:16px}@media(min-width:960px){.grid-2{grid-template-columns:1fr 1fr}.grid-3{grid-template-columns:1fr 1fr 1fr}}
 .row{display:flex;flex-direction:column;margin-bottom:10px}.row label{font-size:12px;color:var(--muted);margin-bottom:6px}.row input{padding:.65rem .8rem;border:1px solid var(--border);border-radius:10px}
 .home .home-center{min-height:calc(100vh - 100px);display:grid;place-items:center}.brand{margin:0 0 8px 0;font-size:40px;font-weight:900}
+pre{font-size:12px}

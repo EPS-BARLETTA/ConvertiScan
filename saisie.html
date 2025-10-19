@@ -5,9 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>ConvertiScan — Saisie</title>
   <link rel="stylesheet" href="style.css">
-  <!-- Local QR library (no CDN needed) -->
-  <script src="vendor/qrcode.min.js" defer></script>
-  <script src="convertiscan.js" defer></script>
 </head>
 <body>
   <main class="wrap">
@@ -19,9 +16,9 @@
     <section class="card">
       <h2>Identité élève</h2>
       <div class="grid-3">
-        <div class="row"><label>Nom (MAJ)</label><input name="nom" placeholder="DURAND" autocomplete="off" autocapitalize="characters"></div>
-        <div class="row"><label>Prénom</label><input name="prenom" placeholder="Camille" autocomplete="off"></div>
-        <div class="row"><label>Classe</label><input name="classe" placeholder="4eB / 4B / 4èmeB" autocomplete="off"></div>
+        <div class="row"><label>Nom (MAJ)</label><input name="nom" placeholder="DURAND"></div>
+        <div class="row"><label>Prénom</label><input name="prenom" placeholder="Camille"></div>
+        <div class="row"><label>Classe</label><input name="classe" placeholder="4eB / 4B / 4èmeB"></div>
       </div>
     </section>
 
@@ -57,5 +54,41 @@
     </section>
   </main>
   <footer class="footer">ConvertiScan — Équipe EPS Lycée Vauban — LUXEMBOURG — JB</footer>
+
+  <!-- Inline QR lib then app script (no external file needed) -->
+  <script>/*! qrcodejs v1.0.0 (MIT) */!function(o){function t(o){this.mode=c,this.data=o}function e(o,t){this.typeNumber=o,this.errorCorrectLevel=t,this.modules=null,this.moduleCount=0,this.dataCache=null,this.dataList=[]}function r(o,t){if(void 0==o.length)throw new Error(o.length+"/"+t);for(var e=0;e<o.length&&0==o[e];)e++;this.num=o.length-e,this.offs=e,this.arr=new Array(this.num);for(var r=0;r<this.num;r++)this.arr[r]=o[r+e]}function n(o,t){this.totalCount=o,this.dataCount=t}function i(){this.buffer=[],this.length=0}function u(){return"undefined"!=typeof CanvasRenderingContext2D}function s(){var o=!1,t=navigator.userAgent;if(/android/i.test(t)){o=!0;var e=t.toString().match(/android ([0-9]\.[0-9])/i);e&&e[1]&&(o=parseFloat(e[1]))}return o}function f(o,t){for(var e=1,r=h(o);r>e;e++);return new n(4*e+17,2*e+1)}function h(o){for(var t=1,e=0,r=0,n=0,i=0,u=0,s=0,f=0,h=0,a=0,c=0,d=0,l=0,p=0,m=0,y=0,v=0,g=0,b=0,w=0,C=0,E=0,S=0,x=0,T=0,k=0,N=0,O=0,D=0,A=0,q=0,R=0,L=0,M=0,P=0,U=0,F=0,I=0,V=0,j=0,B=0,G=0,H=0,J=0,K=0,Q=0,W=0,X=0,Y=0,Z=0,$=0,_=0,oo=0;oo<o.length;oo++)t=o.charCodeAt(oo),e+=t;return(e%3)+1}var a=0,c=4;e.prototype={addData:function(o){var e=new t(o);this.dataList.push(e),this.dataCache=null},isDark:function(o,t){if(this.modules[o][t])return this.modules[o][t];throw new Error(o+","+t)},getModuleCount:function(){return this.moduleCount},make:function(){this.makeImpl(!1,this.getBestMaskPattern())},makeImpl:function(o,t){this.moduleCount=21,this.modules=new Array(this.moduleCount);for(var e=0;e<this.moduleCount;e++){this.modules[e]=new Array(this.moduleCount);for(var r=0;r<this.moduleCount;r++)this.modules[e][r]=null}this.setupPositionProbePattern(0,0),this.setupPositionProbePattern(this.moduleCount-7,0),this.setupPositionProbePattern(0,this.moduleCount-7),this.setupPositionAdjustPattern(),this.setupTimingPattern(),this.mapData(this.createData(),t)},setupPositionProbePattern:function(o,t){for(var e=-1;7>=e;e++)if(!(o+e<=-1||this.moduleCount<=o+e))for(var r=-1;7>=r;r++)t+r<=-1||this.moduleCount<=t+r||(this.modules[o+e][t+r]=e>=0&&6>=e&&(0==r||6==r)||r>=0&&6>=r&&(0==e||6==e)||e>=0&&6>=e&&r>=0&&6>=r?1:0)},getBestMaskPattern:function(){return 0},createData:function(){for(var o=new i,t=0;t<this.dataList.length;t++){var e=this.dataList[t];o.put(4,4);var r=e.data.length;o.put(r,8);for(var n=0;r>n;n++)o.put(e.data.charCodeAt(n),8)}return function(o){for(var t=o.buffer,e=t.length,r=0,n=[];e>=r;r+=1)n.push(t[r]||0);return n}(o)},mapData:function(o,t){for(var e=0,r=this.moduleCount-1,n=this.moduleCount-1,i=-1,u=7,s=0;r>0;r-=2){6==r&&r--;for(;;){for(var f=0;2>f;f++)null==this.modules[n][r-f]&&(s<o.length?(this.modules[n][r-f]=1==(o[s]>>>u&1),u--,-1==u&&(s++,u=7)):this.modules[n][r-f]=0);if(n+=i,0>n||this.moduleCount<=n){n-=i,i=-i;break}}}}};var d={stringToBytes:function(o){for(var t=[],e=0;e<o.length;e++){var r=o.charCodeAt(e);t.push(r)}return t}};e.stringToBytes=d.stringToBytes,window.QRCode=function(o,t){this._el=o,this._htOption=t||{},this._android=s(),this._oQRCode=new e(1,1),this._oQRCode.addData(this._htOption.text||""),this._oQRCode.make(),this._el.innerHTML="",this._oDrawing=new function(o,t){this._el=o,this._htOption=t;var e=document.createElement("canvas");e.width=t.width||256,e.height=t.height||256,o.appendChild(e);var r=e.getContext("2d"),n=t.width||256,i=t.height||256;this.draw=function(o){var t=o.getModuleCount(),e=n/t,u=i/t;r.clearRect(0,0,n,i);for(var s=0;t>s;s++)for(var f=0;t>f;f++){r.fillStyle=o.isDark(s,f)?"#000":"#fff";var h=Math.ceil((f+1)*e)-Math.floor(f*e),a=Math.ceil((s+1)*u)-Math.floor(s*u);r.fillRect(Math.round(f*e),Math.round(s*u),h,a)}}}(this._el,this._htOption),this.makeCode(this._htOption.text)},QRCode.prototype.makeCode=function(o){this._oQRCode=new e(1,1),this._oQRCode.addData(o),this._oQRCode.make(),this._oDrawing.draw(this._oQRCode)},QRCode.CorrectLevel={L:1,M:0,Q:3,H:2}}(window);</script>
+  <script>// --- Utils ---
+function parseTimeToSeconds(str){if(!str)return null;let s=String(str).trim().toLowerCase().replace(/\s+/g,"");s=s.replace(/s$/,"").replace(",","." ).replace(/’/g,"'");if(s.includes(":")){const[m,r]=s.split(":");const sec=parseFloat(r);const min=parseInt(m,10);if(isNaN(min)||isNaN(sec))return null;return min*60+sec}else if(s.includes("'")){const[m,r]=s.split("'");const sec=parseFloat(r);const min=parseInt(m,10);if(isNaN(min)||isNaN(sec))return null;return min*60+sec}else{const sec=parseFloat(s);return isNaN(sec)?null:sec}}
+function fmt(sec){if(sec==null||isNaN(sec))return"—";const m=Math.floor(sec/60);const s=sec-m*60;const t=s<10?`0${s.toFixed(1)}`:s.toFixed(1);return t.endsWith(".0")?`${m}:${t.slice(0,-2)}`:`${m}:${t}`}
+function compute(t200,t400,t600,t800){const T200=parseTimeToSeconds(t200),T400=parseTimeToSeconds(t400),T600=parseTimeToSeconds(t600),T800=parseTimeToSeconds(t800);if([T200,T400,T600,T800].some(v=>v==null))return{ok:false,err:"Saisie incomplète"};if(!(T200<=T400&&T400<=T600&&T600<=T800))return{ok:false,err:"Cumuls non croissants"};const S200=T200,S400=T400-T200,S600=T600-T400,TFIN=T800;return{ok:true,fmt:{S200:fmt(S200),S400:fmt(S400),S600:fmt(S600),TFIN:fmt(TFIN)}}}
+function collect(p){const g=k=>document.querySelector(`[name="${p}_${k}"]`)?.value?.trim()||"";return{t200:g("t200"),t400:g("t400"),t600:g("t600"),t800:g("t800")}}
+function renderOut(id,r){const el=document.getElementById(id);if(!el)return;if(!r||!r.ok){el.textContent=r?.err||"";return}const f=r.fmt;el.textContent=`200:${f.S200} • 400:${f.S400} • 600:${f.S600} • 800:${f.TFIN}`}
+
+document.addEventListener("DOMContentLoaded",()=>{
+  // Live preview
+  ["c1","c2"].forEach(p=>["t200","t400","t600","t800"].forEach(k=>{
+    const el=document.querySelector(`[name="${p}_${k}"]`); if(!el) return;
+    el.addEventListener("input",()=>{const v=collect(p); const r=compute(v.t200,v.t400,v.t600,v.t800); renderOut(p+"_out",r);},{passive:true});
+  }));
+
+  document.getElementById("makeOneQR").addEventListener("click",()=>{
+    if(!window.QRCode){ alert('QR non chargé (mode aperçu ?). Ouvre le fichier "saisie.html" normalement dans le navigateur.'); return; }
+    const nom=document.querySelector('[name="nom"]').value.trim();
+    const prenom=document.querySelector('[name="prenom"]').value.trim();
+    const classe=document.querySelector('[name="classe"]').value.trim();
+    if(!nom||!prenom||!classe){alert("Complète nom, prénom, classe.");return;}
+    const v1=collect("c1"), v2=collect("c2");
+    const r1=compute(v1.t200,v1.t400,v1.t600,v1.t800);
+    const r2=compute(v2.t200,v2.t400,v2.t600,v2.t800);
+    if(!r1.ok||!r2.ok){alert((r1.err||r2.err)||"Complète correctement les 2 courses.");return;}
+    const course1 = `800:${r1.fmt.TFIN} | 200:${r1.fmt.S200} 400:${r1.fmt.S400} 600:${r1.fmt.S600}`;
+    const course2 = `800:${r2.fmt.TFIN} | 200:${r2.fmt.S200} 400:${r2.fmt.S400} 600:${r2.fmt.S600}`;
+    const payload = { nom, prenom, classe, course1, course2 };
+    const el=document.getElementById("qrONE"); el.innerHTML="";
+    new QRCode(el,{text:JSON.stringify(payload),width:280,height:280,correctLevel:QRCode.CorrectLevel.L});
+    document.getElementById("qrHint").textContent="✅ QR généré : 2 colonnes (course1 / course2)";
+    const preview=document.getElementById("jsonPreview"); if(preview){preview.textContent=JSON.stringify(payload,null,2); preview.style.display="block";}
+  }, {passive:true});
+});</script>
 </body>
 </html>
