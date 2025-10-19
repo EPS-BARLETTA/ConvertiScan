@@ -66,49 +66,37 @@ function computeSplits(t200c, t400c, t600c, t800c) {
   const S200 = T200;
   const S400 = T400 - T200;
   const S600 = T600 - T400;
-  const S800 = T800; // temps final (cumul)
+  const TFIN = T800; // temps final (cumul)
 
   return {
     valid:true,
     raw: { T200, T400, T600, T800 },
-    splits: { S200, S400, S600, S800 },
+    splits: { S200, S400, S600, TFIN },
     fmt: {
       S200: fmtTime(S200),
       S400: fmtTime(S400),
       S600: fmtTime(S600),
-      S800: fmtTime(S800),
+      TFIN: fmtTime(TFIN),
     }
   };
 }
 
-// ----------- Stockage local (clé par élève A/B) -----------
-const LS_KEY = 'convertiscan.v1';
-function saveLocal(slot, data) {
-  const all = JSON.parse(localStorage.getItem(LS_KEY) || '{}');
-  all[slot] = data;
-  localStorage.setItem(LS_KEY, JSON.stringify(all));
-}
-function loadLocal(slot) {
-  const all = JSON.parse(localStorage.getItem(LS_KEY) || '{}');
-  return all[slot] || null;
-}
+// ----------- Stockage local -----------
+const LS_KEY = 'convertiscan.v2';
+function saveId(id) { localStorage.setItem(LS_KEY+'.id', JSON.stringify(id)); }
+function loadId() { try { return JSON.parse(localStorage.getItem(LS_KEY+'.id')||'{}'); } catch { return {}; } }
 
-// ----------- Construction QR ScanProf (JSON direct, 1 élève = 1 enregistrement) -----------
-function buildScanProfRecord({ nom, prenom, classe, cumuls, splits }) {
+// ----------- Construction QR ScanProf (JSON direct, champs strictement demandés) -----------
+// Ordre demandé: nom, prenom, classe, split_200, split_400, split_600, temps_800
+function buildScanProfRecord({ nom, prenom, classe, splits }) {
   return {
     nom: (nom || '').toString().toUpperCase().trim(),
     prenom: (prenom || '').toString().trim(),
     classe: normalizeClasse(classe),
-    extras: {
-      epreuve: '800m',
-      cumul_200: cumuls.T200,
-      cumul_400: cumuls.T400,
-      cumul_600: cumuls.T600,
-      cumul_800: cumuls.T800,
-      split_200: splits.S200,
-      split_400: splits.S400,
-      split_600: splits.S600
-    }
+    split_200: Number(splits.S200.toFixed(2)),
+    split_400: Number(splits.S400.toFixed(2)),
+    split_600: Number(splits.S600.toFixed(2)),
+    temps_800: Number(splits.TFIN.toFixed(2))
   };
 }
 
@@ -119,13 +107,19 @@ function makeQR(containerId, payload) {
   new QRCode(el, { text: data, width: 240, height: 240, correctLevel: QRCode.CorrectLevel.L });
 }
 
-// ----------- Liaison UI -----------
-function collect(prefix) {
-  const get = name => document.querySelector(`[name="${prefix}_${name}"]`)?.value?.trim() || '';
+// ----------- Helpers UI -----------
+const $ = sel => document.querySelector(sel);
+function getId() {
   return {
-    nom: get('nom'),
-    prenom: get('prenom'),
-    classe: get('classe'),
+    nom: $('[name="nom"]')?.value?.trim() || '',
+    prenom: $('[name="prenom"]')?.value?.trim() || '',
+    classe: $('[name="classe"]')?.value?.trim() || ''
+  };
+}
+
+function collectCourse(prefix) {
+  const get = (name) => $(`[name="${prefix}_${name}"]`)?.value?.trim() || '';
+  return {
     t200: get('t200'),
     t400: get('t400'),
     t600: get('t600'),
@@ -141,58 +135,54 @@ function renderOut(id, result) {
   }
   const f = result.fmt;
   box.innerHTML = `
-    <span class="chip">200 → ${f.S200}</span>
-    <span class="chip">400 → ${f.S400}</span>
-    <span class="chip">600 → ${f.S600}</span>
-    <span class="chip">800 (total) → ${f.S800}</span>
+    <span class="chip">Split 200 → ${f.S200}</span>
+    <span class="chip">Split 400 → ${f.S400}</span>
+    <span class="chip">Split 600 → ${f.S600}</span>
+    <span class="chip">Temps 800 → ${f.TFIN}</span>
   `;
 }
 
 function handleLive(prefix, outId) {
-  const inputs = ['t200','t400','t600','t800'].map(s => document.querySelector(`[name="${prefix}_${s}"]`));
-  inputs.forEach(inp => inp.addEventListener('input', () => {
-    const v = collect(prefix);
-    const r = computeSplits(v.t200, v.t400, v.t600, v.t800);
-    renderOut(outId, r);
-  }));
+  ['t200','t400','t600','t800'].forEach(k => {
+    $(`[name="${prefix}_${k}"]`).addEventListener('input', () => {
+      const v = collectCourse(prefix);
+      const r = computeSplits(v.t200, v.t400, v.t600, v.t800);
+      renderOut(outId, r);
+    });
+  });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  handleLive('a', 'a_out');
-  handleLive('b', 'b_out');
-
-  document.querySelectorAll('[data-save]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const slot = btn.getAttribute('data-save');
-      const v = collect(slot.toLowerCase());
-      saveLocal(`eleve_${slot}`, v);
-      alert(`Élève ${slot} enregistré en local.`);
-    });
+  // Home identity save/load
+  $('#saveId').addEventListener('click', () => {
+    const id = getId(); saveId(id);
+    alert('Identité enregistrée en local.');
   });
-  document.querySelectorAll('[data-load]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const slot = btn.getAttribute('data-load');
-      const v = loadLocal(`eleve_${slot}`);
-      if (!v) return alert(`Aucune donnée locale pour ${slot}.`);
-      const set = (name, val) => { const el = document.querySelector(`[name="${slot.toLowerCase()}_${name}"]`); if (el) el.value = val || ''; };
-      Object.entries(v).forEach(([k,val]) => set(k, val));
-      const r = computeSplits(v.t200, v.t400, v.t600, v.t800);
-      renderOut(`${slot.toLowerCase()}_out`, r);
-    });
+  $('#loadId').addEventListener('click', () => {
+    const id = loadId();
+    if (!id || (!id.nom && !id.prenom && !id.classe)) return alert('Aucune identité locale.');
+    if ($('[name="nom"]')) $('[name="nom"]').value = id.nom || '';
+    if ($('[name="prenom"]')) $('[name="prenom"]').value = id.prenom || '';
+    if ($('[name="classe"]')) $('[name="classe"]').value = id.classe || '';
   });
 
+  // Live compute per course
+  handleLive('c1', 'c1_out');
+  handleLive('c2', 'c2_out');
+
+  // QR buttons per course
   document.querySelectorAll('[data-qr]').forEach(btn => {
     btn.addEventListener('click', () => {
-      const slot = btn.getAttribute('data-qr').toLowerCase();
-      const v = collect(slot);
+      const course = btn.getAttribute('data-qr').toLowerCase(); // c1 / c2
+      const id = getId();
+      if (!id.nom || !id.prenom || !id.classe) {
+        return alert('Complète le nom, le prénom et la classe.');
+      }
+      const v = collectCourse(course);
       const r = computeSplits(v.t200, v.t400, v.t600, v.t800);
       if (!r.valid) return alert(r.error || 'Saisie incomplète/incorrecte.');
-
-      const rec = buildScanProfRecord({
-        nom: v.nom, prenom: v.prenom, classe: v.classe,
-        cumuls: r.raw, splits: r.splits
-      });
-      makeQR(`qr${slot.toUpperCase()}`, rec);
+      const rec = buildScanProfRecord({ ...id, splits: r.splits });
+      makeQR(`qr${course.toUpperCase()}`, rec);
     });
   });
 });

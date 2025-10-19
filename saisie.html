@@ -6,7 +6,6 @@
   <title>ConvertiScan — Saisie</title>
   <link rel="stylesheet" href="style.css">
 
-  <!-- Librairie QR en LOCAL (MDM-safe) + fallback CDN si absente -->
   <script src="vendor/qrcode.min.js"></script>
   <script>if(!window.QRCode){document.write('<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"><\/script>')}</script>
 </head>
@@ -17,82 +16,67 @@
       <h1>ConvertiScan</h1>
     </header>
 
-    <!-- FORMULAIRE 2 ÉLÈVES -->
-    <form id="form" class="grid-2">
-      <!-- Élève A -->
-      <fieldset class="card">
-        <legend>Élève A</legend>
-
+    <!-- Identité élève (unique) -->
+    <section class="card">
+      <h2>Identité élève</h2>
+      <div class="grid-3">
         <div class="row">
           <label>Nom (MAJ)</label>
-          <input name="a_nom" required placeholder="DURAND">
+          <input name="nom" placeholder="DURAND">
         </div>
         <div class="row">
           <label>Prénom</label>
-          <input name="a_prenom" required placeholder="Camille">
+          <input name="prenom" placeholder="Camille">
         </div>
         <div class="row">
           <label>Classe</label>
-          <input name="a_classe" required placeholder="4eB / 4B / 4èmeB">
+          <input name="classe" placeholder="4eB / 4B / 4èmeB">
         </div>
+      </div>
+      <div class="buttons">
+        <button class="btn" type="button" id="saveId">💾 Enregistrer identité</button>
+        <button class="btn" type="button" id="loadId">📂 Charger identité</button>
+      </div>
+    </section>
 
+    <!-- Deux courses pour le même élève -->
+    <form id="form" class="grid-2">
+      <!-- Course 1 -->
+      <fieldset class="card">
+        <legend>Course 1 — Temps cumulés</legend>
         <div class="grid-2 tight">
-          <div class="row"><label>200 (cumul)</label><input name="a_t200" placeholder="52s"></div>
-          <div class="row"><label>400 (cumul)</label><input name="a_t400" placeholder="1:48"></div>
-          <div class="row"><label>600 (cumul)</label><input name="a_t600" placeholder="2:47"></div>
-          <div class="row"><label>800 (cumul)</label><input name="a_t800" placeholder="3:44"></div>
+          <div class="row"><label>200 (cumul)</label><input name="c1_t200" placeholder="52s"></div>
+          <div class="row"><label>400 (cumul)</label><input name="c1_t400" placeholder="1:48"></div>
+          <div class="row"><label>600 (cumul)</label><input name="c1_t600" placeholder="2:47"></div>
+          <div class="row"><label>800 (cumul)</label><input name="c1_t800" placeholder="3:44"></div>
         </div>
-
         <div class="rowsm">
-          <div class="muted">Intermédiaires (calculés) :</div>
-          <div class="chips" id="a_out"></div>
+          <div class="muted">Intermédiaires Course 1 :</div>
+          <div class="chips" id="c1_out"></div>
         </div>
-
-        <div class="row buttons">
-          <button class="btn" type="button" data-save="A">💾 Enregistrer A (local)</button>
-          <button class="btn" type="button" data-load="A">📂 Charger A</button>
-          <button class="btn yellow" type="button" data-qr="A">🧾 QR ScanProf (A)</button>
+        <div class="buttons">
+          <button class="btn yellow" type="button" data-qr="C1">🧾 QR ScanProf (Course 1)</button>
         </div>
-
-        <div id="qrA" class="qrbox"></div>
+        <div id="qrC1" class="qrbox"></div>
       </fieldset>
 
-      <!-- Élève B -->
+      <!-- Course 2 -->
       <fieldset class="card">
-        <legend>Élève B</legend>
-
-        <div class="row">
-          <label>Nom (MAJ)</label>
-          <input name="b_nom" required placeholder="MARTIN">
-        </div>
-        <div class="row">
-          <label>Prénom</label>
-          <input name="b_prenom" required placeholder="Lina">
-        </div>
-        <div class="row">
-          <label>Classe</label>
-          <input name="b_classe" required placeholder="4eA / 4A / 4èmeA">
-        </div>
-
+        <legend>Course 2 — Temps cumulés</legend>
         <div class="grid-2 tight">
-          <div class="row"><label>200 (cumul)</label><input name="b_t200" placeholder="52s"></div>
-          <div class="row"><label>400 (cumul)</label><input name="b_t400" placeholder="1:48"></div>
-          <div class="row"><label>600 (cumul)</label><input name="b_t600" placeholder="2:47"></div>
-          <div class="row"><label>800 (cumul)</label><input name="b_t800" placeholder="3:44"></div>
+          <div class="row"><label>200 (cumul)</label><input name="c2_t200" placeholder="52s"></div>
+          <div class="row"><label>400 (cumul)</label><input name="c2_t400" placeholder="1:48"></div>
+          <div class="row"><label>600 (cumul)</label><input name="c2_t600" placeholder="2:47"></div>
+          <div class="row"><label>800 (cumul)</label><input name="c2_t800" placeholder="3:44"></div>
         </div>
-
         <div class="rowsm">
-          <div class="muted">Intermédiaires (calculés) :</div>
-          <div class="chips" id="b_out"></div>
+          <div class="muted">Intermédiaires Course 2 :</div>
+          <div class="chips" id="c2_out"></div>
         </div>
-
-        <div class="row buttons">
-          <button class="btn" type="button" data-save="B">💾 Enregistrer B (local)</button>
-          <button class="btn" type="button" data-load="B">📂 Charger B</button>
-          <button class="btn yellow" type="button" data-qr="B">🧾 QR ScanProf (B)</button>
+        <div class="buttons">
+          <button class="btn yellow" type="button" data-qr="C2">🧾 QR ScanProf (Course 2)</button>
         </div>
-
-        <div id="qrB" class="qrbox"></div>
+        <div id="qrC2" class="qrbox"></div>
       </fieldset>
     </form>
 
