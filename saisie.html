@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="style.css">
   <script src="vendor/qrcode.min.js"></script>
   <script>if(!window.QRCode){document.write('<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"><\/script>')}</script>
+  <script src="scanprof-embed.js"></script>
 </head>
 <body>
   <main class="wrap">
@@ -15,55 +16,36 @@
       <h1>ConvertiScan</h1>
     </header>
 
-    <!-- Identité élève (unique) -->
     <section class="card">
       <h2>Identité élève</h2>
       <div class="grid-3">
-        <div class="row">
-          <label>Nom (MAJ)</label>
-          <input name="nom" placeholder="DURAND" autocomplete="off" autocapitalize="characters">
-        </div>
-        <div class="row">
-          <label>Prénom</label>
-          <input name="prenom" placeholder="Camille" autocomplete="off">
-        </div>
-        <div class="row">
-          <label>Classe</label>
-          <input name="classe" placeholder="4eB / 4B / 4èmeB" autocomplete="off">
-        </div>
+        <div class="row"><label>Nom (MAJ)</label><input name="nom" placeholder="DURAND"></div>
+        <div class="row"><label>Prénom</label><input name="prenom" placeholder="Camille"></div>
+        <div class="row"><label>Classe</label><input name="classe" placeholder="4eB / 4B / 4èmeB"></div>
       </div>
     </section>
 
-    <!-- Deux courses pour le même élève -->
-    <form id="form" class="grid-2" onsubmit="return false">
-      <!-- Course 1 -->
+    <form class="grid-2" onsubmit="return false">
       <fieldset class="card">
-        <legend>Course 1 — Temps cumulés</legend>
+        <legend>Course 1 — Cumuls</legend>
         <div class="grid-2 tight">
-          <div class="row"><label>200 (cumul)</label><input name="c1_t200" placeholder="52s ou 0:52 ou 52" inputmode="decimal"></div>
-          <div class="row"><label>400 (cumul)</label><input name="c1_t400" placeholder="1:48 ou 108" inputmode="decimal"></div>
-          <div class="row"><label>600 (cumul)</label><input name="c1_t600" placeholder="2:47" inputmode="decimal"></div>
-          <div class="row"><label>800 (cumul)</label><input name="c1_t800" placeholder="3:44 ou 224" inputmode="decimal"></div>
+          <div class="row"><label>200 (cumul)</label><input name="c1_t200" placeholder="0:52 / 52"></div>
+          <div class="row"><label>400 (cumul)</label><input name="c1_t400" placeholder="1:48 / 108"></div>
+          <div class="row"><label>600 (cumul)</label><input name="c1_t600" placeholder="2:47"></div>
+          <div class="row"><label>800 (cumul)</label><input name="c1_t800" placeholder="3:44 / 224"></div>
         </div>
-        <div class="rowsm">
-          <div class="muted">Splits Course 1 :</div>
-          <div class="chips" id="c1_out"></div>
-        </div>
+        <div class="muted">Splits C1: <span id="c1_out"></span></div>
       </fieldset>
 
-      <!-- Course 2 -->
       <fieldset class="card">
-        <legend>Course 2 — Temps cumulés</legend>
+        <legend>Course 2 — Cumuls</legend>
         <div class="grid-2 tight">
-          <div class="row"><label>200 (cumul)</label><input name="c2_t200" placeholder="52s ou 0:52 ou 52" inputmode="decimal"></div>
-          <div class="row"><label>400 (cumul)</label><input name="c2_t400" placeholder="1:48 ou 108" inputmode="decimal"></div>
-          <div class="row"><label>600 (cumul)</label><input name="c2_t600" placeholder="2:47" inputmode="decimal"></div>
-          <div class="row"><label>800 (cumul)</label><input name="c2_t800" placeholder="3:44 ou 224" inputmode="decimal"></div>
+          <div class="row"><label>200 (cumul)</label><input name="c2_t200" placeholder="0:52 / 52"></div>
+          <div class="row"><label>400 (cumul)</label><input name="c2_t400" placeholder="1:48 / 108"></div>
+          <div class="row"><label>600 (cumul)</label><input name="c2_t600" placeholder="2:47"></div>
+          <div class="row"><label>800 (cumul)</label><input name="c2_t800" placeholder="3:44 / 224"></div>
         </div>
-        <div class="rowsm">
-          <div class="muted">Splits Course 2 :</div>
-          <div class="chips" id="c2_out"></div>
-        </div>
+        <div class="muted">Splits C2: <span id="c2_out"></span></div>
       </fieldset>
     </form>
 
@@ -73,13 +55,10 @@
       </div>
       <div id="qrONE" class="qrbox" style="justify-content:center"></div>
       <div class="muted" id="qrHint"></div>
-      <pre id="jsonPreview" style="text-align:left;white-space:pre-wrap;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:10px;padding:10px;display:none;"></pre>
     </section>
   </main>
 
-  <footer class="footer">
-    ConvertiScan — Équipe EPS Lycée Vauban — LUXEMBOURG — JB
-  </footer>
+  <footer class="footer">ConvertiScan — Équipe EPS Lycée Vauban — LUXEMBOURG — JB</footer>
 
   <script src="convertiscan.js"></script>
 </body>
