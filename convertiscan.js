@@ -61,26 +61,34 @@ function computeSplits(t200c, t400c, t600c, t800c) {
     fmt: { S200: fmtTime(S200), S400: fmtTime(S400), S600: fmtTime(S600), TFIN: fmtTime(TFIN) }
   };
 }
-const LS = 'convertiscan.v3';
+const LS = 'convertiscan.v4';
 function saveId(id){ localStorage.setItem(LS+'.id', JSON.stringify(id)); }
 function loadId(){ try{return JSON.parse(localStorage.getItem(LS+'.id')||'{}')}catch{return {}} }
-function buildScanProfRecord({ nom, prenom, classe, splits, essai }) {
+
+// ------- Construction d'un SEUL QR avec 2 courses (flat fields) -------
+function buildOneQR({ nom, prenom, classe, c1, c2 }) {
   return {
     nom: (nom||'').toUpperCase().trim(),
     prenom: (prenom||'').trim(),
     classe: normalizeClasse(classe),
-    split_200: Number(splits.S200.toFixed(2)),
-    split_400: Number(splits.S400.toFixed(2)),
-    split_600: Number(splits.S600.toFixed(2)),
-    temps_800: Number(splits.TFIN.toFixed(2)),
-    essai: essai
+    // Course 1
+    split200_1: Number(c1.S200.toFixed(2)),
+    split400_1: Number(c1.S400.toFixed(2)),
+    split600_1: Number(c1.S600.toFixed(2)),
+    temps800_1: Number(c1.TFIN.toFixed(2)),
+    // Course 2
+    split200_2: Number(c2.S200.toFixed(2)),
+    split400_2: Number(c2.S400.toFixed(2)),
+    split600_2: Number(c2.S600.toFixed(2)),
+    temps800_2: Number(c2.TFIN.toFixed(2))
   };
 }
+
 function makeQR(containerId, payload){
   const el = document.getElementById(containerId);
   el.innerHTML = '';
   const data = JSON.stringify(payload);
-  new QRCode(el, { text: data, width: 240, height: 240, correctLevel: QRCode.CorrectLevel.L });
+  new QRCode(el, { text: data, width: 260, height: 260, correctLevel: QRCode.CorrectLevel.L });
 }
 const $ = (s)=>document.querySelector(s);
 function getId(){ return { nom:$('[name="nom"]')?.value?.trim()||'', prenom:$('[name="prenom"]')?.value?.trim()||'', classe:$('[name="classe"]')?.value?.trim()||'' } }
@@ -117,17 +125,17 @@ document.addEventListener('DOMContentLoaded',()=>{
     const classe = document.querySelector('[name="classe"]'); if(classe) classe.value = id.classe||'';
   });
   live('c1','c1_out'); live('c2','c2_out');
-  document.querySelectorAll('[data-qr]').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      const which = btn.getAttribute('data-qr').toLowerCase(); // c1/c2
-      const essai = which==='c1'?1:2;
-      const id = getId();
-      if(!id.nom||!id.prenom||!id.classe) return alert('Complète nom, prénom, classe.');
-      const v = collectCourse(which);
-      const r = computeSplits(v.t200,v.t400,v.t600,v.t800);
-      if(!r.valid) return alert(r.error || 'Saisie incomplète/incorrecte.');
-      const rec = buildScanProfRecord({ nom:id.nom, prenom:id.prenom, classe:id.classe, splits:r.splits, essai });
-      makeQR(`qr${which.toUpperCase()}`, rec);
-    });
+
+  document.getElementById('makeOneQR').addEventListener('click',()=>{
+    const id = getId();
+    if(!id.nom||!id.prenom||!id.classe) return alert('Complète nom, prénom, classe.');
+    const v1 = collectCourse('c1');
+    const v2 = collectCourse('c2');
+    const r1 = computeSplits(v1.t200,v1.t400,v1.t600,v1.t800);
+    const r2 = computeSplits(v2.t200,v2.t400,v2.t600,v2.t800);
+    if(!r1.valid || !r2.valid) return alert('Complète correctement les 2 courses (cumuls croissants).');
+    const rec = buildOneQR({ nom:id.nom, prenom:id.prenom, classe:id.classe, c1:r1.splits, c2:r2.splits });
+    makeQR('qrONE', rec);
+    document.getElementById('qrHint').textContent = 'QR généré : 1 élève, 2 courses (champs à plat).';
   });
 });

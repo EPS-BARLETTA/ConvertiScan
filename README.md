@@ -1,10 +1,15 @@
-# ConvertiScan (v3)
+# ConvertiScan (v4 – 1 QR pour 2 courses)
 
 - Accueil **centré**.
 - **1 élève** avec **2 courses** (Course 1 & Course 2).
-- **Compat ScanProf** : 1 QR = 1 enregistrement. On génère **2 QR** pour éviter les doublons — chaque QR inclut un champ `essai` (=1 ou 2) pour différencier les deux mesures du même élève.
-- **Champs EXACTS** dans chaque QR : `nom`, `prenom`, `classe`, `split_200`, `split_400`, `split_600`, `temps_800`, `essai`.
-- Splits et temps sont **en secondes (nombres)** pour être exploitables ; l’UI affiche aussi **mm:ss**.
+- **UN SEUL QR** contenant les deux séries de splits, via des **champs à plat** (compat ScanProf dynamique) :  
+  `nom`, `prenom`, `classe`,  
+  `split200_1`, `split400_1`, `split600_1`, `temps800_1`,  
+  `split200_2`, `split400_2`, `split600_2`, `temps800_2`.
+
+> Pas de tableau imbriqué → ScanProf verra simplement des colonnes supplémentaires, donc exploitable.
+
+Les valeurs de temps sont en **secondes** (nombres). L’UI affiche en **mm:ss** pour la lisibilité.
 
 ## Déploiement
 Pousse les fichiers à la racine du dépôt et active GitHub Pages.

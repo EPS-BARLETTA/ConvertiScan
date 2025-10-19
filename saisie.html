@@ -53,10 +53,6 @@
           <div class="muted">Splits Course 1 :</div>
           <div class="chips" id="c1_out"></div>
         </div>
-        <div class="buttons">
-          <button class="btn yellow" type="button" data-qr="C1">🧾 QR ScanProf (Course 1)</button>
-        </div>
-        <div id="qrC1" class="qrbox"></div>
       </fieldset>
 
       <!-- Course 2 -->
@@ -72,16 +68,18 @@
           <div class="muted">Splits Course 2 :</div>
           <div class="chips" id="c2_out"></div>
         </div>
-        <div class="buttons">
-          <button class="btn yellow" type="button" data-qr="C2">🧾 QR ScanProf (Course 2)</button>
-        </div>
-        <div id="qrC2" class="qrbox"></div>
       </fieldset>
     </form>
 
+    <section class="card center">
+      <button class="btn yellow big" type="button" id="makeOneQR">🧾 Générer 1 QR (2 courses)</button>
+      <div id="qrONE" class="qrbox" style="justify-content:center"></div>
+      <div class="muted" id="qrHint"></div>
+    </section>
+
     <section class="card">
       <div class="muted">Astuce</div>
-      <p>Affichage lisible en <em>mm:ss</em> pour toi. Dans le QR : <strong>secondes numériques</strong> (utilisables par ScanProf).</p>
+      <p>À l’écran : **mm:ss** pour lire facilement. Dans le QR : **secondes numériques** (utilisables par ScanProf). Le QR contient des champs à plat (pas d’objet imbriqué) pour éviter tout souci d’import.</p>
     </section>
   </main>
 
