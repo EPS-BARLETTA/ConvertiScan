@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>ConvertiScan — Saisie</title>
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Librairie QR en LOCAL (MDM-safe) + fallback CDN si absente -->
+  <script src="vendor/qrcode.min.js"></script>
+  <script>if(!window.QRCode){document.write('<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"><\/script>')}</script>
+</head>
+<body>
+  <main class="wrap">
+    <header class="topbar">
+      <a class="btn" href="index.html">🏠 Accueil</a>
+      <h1>ConvertiScan</h1>
+    </header>
+
+    <!-- FORMULAIRE 2 ÉLÈVES -->
+    <form id="form" class="grid-2">
+      <!-- Élève A -->
+      <fieldset class="card">
+        <legend>Élève A</legend>
+
+        <div class="row">
+          <label>Nom (MAJ)</label>
+          <input name="a_nom" required placeholder="DURAND">
+        </div>
+        <div class="row">
+          <label>Prénom</label>
+          <input name="a_prenom" required placeholder="Camille">
+        </div>
+        <div class="row">
+          <label>Classe</label>
+          <input name="a_classe" required placeholder="4eB / 4B / 4èmeB">
+        </div>
+
+        <div class="grid-2 tight">
+          <div class="row"><label>200 (cumul)</label><input name="a_t200" placeholder="52s"></div>
+          <div class="row"><label>400 (cumul)</label><input name="a_t400" placeholder="1:48"></div>
+          <div class="row"><label>600 (cumul)</label><input name="a_t600" placeholder="2:47"></div>
+          <div class="row"><label>800 (cumul)</label><input name="a_t800" placeholder="3:44"></div>
+        </div>
+
+        <div class="rowsm">
+          <div class="muted">Intermédiaires (calculés) :</div>
+          <div class="chips" id="a_out"></div>
+        </div>
+
+        <div class="row buttons">
+          <button class="btn" type="button" data-save="A">💾 Enregistrer A (local)</button>
+          <button class="btn" type="button" data-load="A">📂 Charger A</button>
+          <button class="btn yellow" type="button" data-qr="A">🧾 QR ScanProf (A)</button>
+        </div>
+
+        <div id="qrA" class="qrbox"></div>
+      </fieldset>
+
+      <!-- Élève B -->
+      <fieldset class="card">
+        <legend>Élève B</legend>
+
+        <div class="row">
+          <label>Nom (MAJ)</label>
+          <input name="b_nom" required placeholder="MARTIN">
+        </div>
+        <div class="row">
+          <label>Prénom</label>
+          <input name="b_prenom" required placeholder="Lina">
+        </div>
+        <div class="row">
+          <label>Classe</label>
+          <input name="b_classe" required placeholder="4eA / 4A / 4èmeA">
+        </div>
+
+        <div class="grid-2 tight">
+          <div class="row"><label>200 (cumul)</label><input name="b_t200" placeholder="52s"></div>
+          <div class="row"><label>400 (cumul)</label><input name="b_t400" placeholder="1:48"></div>
+          <div class="row"><label>600 (cumul)</label><input name="b_t600" placeholder="2:47"></div>
+          <div class="row"><label>800 (cumul)</label><input name="b_t800" placeholder="3:44"></div>
+        </div>
+
+        <div class="rowsm">
+          <div class="muted">Intermédiaires (calculés) :</div>
+          <div class="chips" id="b_out"></div>
+        </div>
+
+        <div class="row buttons">
+          <button class="btn" type="button" data-save="B">💾 Enregistrer B (local)</button>
+          <button class="btn" type="button" data-load="B">📂 Charger B</button>
+          <button class="btn yellow" type="button" data-qr="B">🧾 QR ScanProf (B)</button>
+        </div>
+
+        <div id="qrB" class="qrbox"></div>
+      </fieldset>
+    </form>
+
+    <section class="card">
+      <div class="muted">Astuce saisie</div>
+      <p>Tu peux écrire <strong>1:48</strong>, <strong>1'48</strong>, <strong>108</strong>, <strong>1:48.5</strong> ou <strong>1:48,5</strong>. Les virgules sont acceptées.</p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    ConvertiScan — Équipe EPS Lycée Vauban — LUXEMBOURG — JB
+  </footer>
+
+  <script src="convertiscan.js"></script>
+</body>
+</html>
