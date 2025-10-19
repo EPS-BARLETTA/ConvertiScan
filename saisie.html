@@ -21,15 +21,15 @@
       <div class="grid-3">
         <div class="row">
           <label>Nom (MAJ)</label>
-          <input name="nom" placeholder="DURAND">
+          <input name="nom" placeholder="DURAND" autocomplete="off" autocapitalize="characters">
         </div>
         <div class="row">
           <label>Prénom</label>
-          <input name="prenom" placeholder="Camille">
+          <input name="prenom" placeholder="Camille" autocomplete="off">
         </div>
         <div class="row">
           <label>Classe</label>
-          <input name="classe" placeholder="4eB / 4B / 4èmeB">
+          <input name="classe" placeholder="4eB / 4B / 4èmeB" autocomplete="off">
         </div>
       </div>
       <div class="buttons">
@@ -39,15 +39,15 @@
     </section>
 
     <!-- Deux courses pour le même élève -->
-    <form id="form" class="grid-2">
+    <form id="form" class="grid-2" onsubmit="return false">
       <!-- Course 1 -->
       <fieldset class="card">
         <legend>Course 1 — Temps cumulés</legend>
         <div class="grid-2 tight">
-          <div class="row"><label>200 (cumul)</label><input name="c1_t200" placeholder="52s"></div>
-          <div class="row"><label>400 (cumul)</label><input name="c1_t400" placeholder="1:48"></div>
-          <div class="row"><label>600 (cumul)</label><input name="c1_t600" placeholder="2:47"></div>
-          <div class="row"><label>800 (cumul)</label><input name="c1_t800" placeholder="3:44"></div>
+          <div class="row"><label>200 (cumul)</label><input name="c1_t200" placeholder="52s ou 0:52 ou 52" inputmode="decimal"></div>
+          <div class="row"><label>400 (cumul)</label><input name="c1_t400" placeholder="1:48 ou 108" inputmode="decimal"></div>
+          <div class="row"><label>600 (cumul)</label><input name="c1_t600" placeholder="2:47" inputmode="decimal"></div>
+          <div class="row"><label>800 (cumul)</label><input name="c1_t800" placeholder="3:44 ou 224" inputmode="decimal"></div>
         </div>
         <div class="rowsm">
           <div class="muted">Splits Course 1 :</div>
@@ -59,10 +59,10 @@
       <fieldset class="card">
         <legend>Course 2 — Temps cumulés</legend>
         <div class="grid-2 tight">
-          <div class="row"><label>200 (cumul)</label><input name="c2_t200" placeholder="52s"></div>
-          <div class="row"><label>400 (cumul)</label><input name="c2_t400" placeholder="1:48"></div>
-          <div class="row"><label>600 (cumul)</label><input name="c2_t600" placeholder="2:47"></div>
-          <div class="row"><label>800 (cumul)</label><input name="c2_t800" placeholder="3:44"></div>
+          <div class="row"><label>200 (cumul)</label><input name="c2_t200" placeholder="52s ou 0:52 ou 52" inputmode="decimal"></div>
+          <div class="row"><label>400 (cumul)</label><input name="c2_t400" placeholder="1:48 ou 108" inputmode="decimal"></div>
+          <div class="row"><label>600 (cumul)</label><input name="c2_t600" placeholder="2:47" inputmode="decimal"></div>
+          <div class="row"><label>800 (cumul)</label><input name="c2_t800" placeholder="3:44 ou 224" inputmode="decimal"></div>
         </div>
         <div class="rowsm">
           <div class="muted">Splits Course 2 :</div>
@@ -79,7 +79,7 @@
 
     <section class="card">
       <div class="muted">Astuce</div>
-      <p>À l’écran : **mm:ss** pour lire facilement. Dans le QR : **secondes numériques** (utilisables par ScanProf). Le QR contient des champs à plat (pas d’objet imbriqué) pour éviter tout souci d’import.</p>
+      <p>À l’écran : <strong>mm:ss</strong>. Dans le QR : <strong>secondes numériques</strong> (ex. 48 → 48, 3:44 → 224).</p>
     </section>
   </main>
 

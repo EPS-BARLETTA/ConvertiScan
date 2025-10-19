@@ -47,7 +47,7 @@ function computeSplits(t200c, t400c, t600c, t800c) {
   const T600 = parseTimeToSeconds(t600c);
   const T800 = parseTimeToSeconds(t800c);
   const valid = [T200, T400, T600, T800].every(v => v != null);
-  if (!valid) return { valid:false };
+  if (!valid) return { valid:false, error: 'Saisie incomplète' };
   if (!(T200 <= T400 && T400 <= T600 && T600 <= T800)) {
     return { valid:false, error:'Cumul non croissant (200 ≤ 400 ≤ 600 ≤ 800).' };
   }
@@ -61,29 +61,26 @@ function computeSplits(t200c, t400c, t600c, t800c) {
     fmt: { S200: fmtTime(S200), S400: fmtTime(S400), S600: fmtTime(S600), TFIN: fmtTime(TFIN) }
   };
 }
-const LS = 'convertiscan.v4';
+const LS = 'convertiscan.v5';
 function saveId(id){ localStorage.setItem(LS+'.id', JSON.stringify(id)); }
 function loadId(){ try{return JSON.parse(localStorage.getItem(LS+'.id')||'{}')}catch{return {}} }
 
-// ------- Construction d'un SEUL QR avec 2 courses (flat fields) -------
+// ------- SEUL QR avec 2 courses (flat fields) -------
 function buildOneQR({ nom, prenom, classe, c1, c2 }) {
   return {
     nom: (nom||'').toUpperCase().trim(),
     prenom: (prenom||'').trim(),
     classe: normalizeClasse(classe),
-    // Course 1
     split200_1: Number(c1.S200.toFixed(2)),
     split400_1: Number(c1.S400.toFixed(2)),
     split600_1: Number(c1.S600.toFixed(2)),
     temps800_1: Number(c1.TFIN.toFixed(2)),
-    // Course 2
     split200_2: Number(c2.S200.toFixed(2)),
     split400_2: Number(c2.S400.toFixed(2)),
     split600_2: Number(c2.S600.toFixed(2)),
     temps800_2: Number(c2.TFIN.toFixed(2))
   };
 }
-
 function makeQR(containerId, payload){
   const el = document.getElementById(containerId);
   el.innerHTML = '';
@@ -108,34 +105,40 @@ function renderOut(id, r){
 function live(prefix,outId){
   ['t200','t400','t600','t800'].forEach(k=>{
     const el = document.querySelector(`[name="${prefix}_${k}"]`);
+    if(!el) return;
     el.addEventListener('input', ()=>{
       const v = collectCourse(prefix);
       const r = computeSplits(v.t200,v.t400,v.t600,v.t800);
       renderOut(outId,r);
-    });
+    }, { passive: true });
   });
 }
 document.addEventListener('DOMContentLoaded',()=>{
-  document.getElementById('saveId').addEventListener('click',()=>{ saveId(getId()); alert('Identité enregistrée.'); });
-  document.getElementById('loadId').addEventListener('click',()=>{
+  const saveBtn = document.getElementById('saveId');
+  const loadBtn = document.getElementById('loadId');
+  if(saveBtn) saveBtn.addEventListener('click',()=>{ saveId(getId()); alert('Identité enregistrée.'); });
+  if(loadBtn) loadBtn.addEventListener('click',()=>{
     const id = loadId();
     if(!id || (!id.nom && !id.prenom && !id.classe)) return alert('Aucune identité locale.');
     const nom = document.querySelector('[name="nom"]'); if(nom) nom.value = id.nom||'';
     const prenom = document.querySelector('[name="prenom"]'); if(prenom) prenom.value = id.prenom||'';
     const classe = document.querySelector('[name="classe"]'); if(classe) classe.value = id.classe||'';
   });
+
   live('c1','c1_out'); live('c2','c2_out');
 
-  document.getElementById('makeOneQR').addEventListener('click',()=>{
+  const makeBtn = document.getElementById('makeOneQR');
+  if(makeBtn) makeBtn.addEventListener('click',()=>{
     const id = getId();
-    if(!id.nom||!id.prenom||!id.classe) return alert('Complète nom, prénom, classe.');
+    if(!id.nom||!id.prenom||!id.classe) { alert('Complète nom, prénom, classe.'); return; }
     const v1 = collectCourse('c1');
     const v2 = collectCourse('c2');
     const r1 = computeSplits(v1.t200,v1.t400,v1.t600,v1.t800);
     const r2 = computeSplits(v2.t200,v2.t400,v2.t600,v2.t800);
-    if(!r1.valid || !r2.valid) return alert('Complète correctement les 2 courses (cumuls croissants).');
+    if(!r1.valid || !r2.valid) { alert((r1.error||r2.error)||'Complète correctement les 2 courses.'); return; }
     const rec = buildOneQR({ nom:id.nom, prenom:id.prenom, classe:id.classe, c1:r1.splits, c2:r2.splits });
     makeQR('qrONE', rec);
-    document.getElementById('qrHint').textContent = 'QR généré : 1 élève, 2 courses (champs à plat).';
-  });
+    const hint = document.getElementById('qrHint');
+    if(hint) hint.textContent = '✅ QR généré avec succès (1 élève / 2 courses).';
+  }, { passive: true });
 });
