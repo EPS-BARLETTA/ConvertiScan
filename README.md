@@ -1,16 +1,10 @@
-# ConvertiScan (v2)
+# ConvertiScan (v3)
 
-- Page de garde **centrée**.
-- Saisie **1 élève** avec **2 courses** (Course 1 & Course 2).
-- QR **ScanProf** par course, avec **champs strictement demandés** :
-  `nom`, `prenom`, `classe`, `split_200`, `split_400`, `split_600`, `temps_800` (en secondes, numériques).
-
-## Fichiers
-- `index.html` — page d’accueil (centrée).
-- `saisie.html` — identité élève, 2 courses (cumuls), calcul live, QR par course.
-- `style.css` — styles.
-- `convertiscan.js` — logique.
-- `vendor/qrcode.min.js` — placeholder (fallback CDN si absent).
+- Accueil **centré**.
+- **1 élève** avec **2 courses** (Course 1 & Course 2).
+- **Compat ScanProf** : 1 QR = 1 enregistrement. On génère **2 QR** pour éviter les doublons — chaque QR inclut un champ `essai` (=1 ou 2) pour différencier les deux mesures du même élève.
+- **Champs EXACTS** dans chaque QR : `nom`, `prenom`, `classe`, `split_200`, `split_400`, `split_600`, `temps_800`, `essai`.
+- Splits et temps sont **en secondes (nombres)** pour être exploitables ; l’UI affiche aussi **mm:ss**.
 
 ## Déploiement
-GitHub Pages : pousser les fichiers à la racine du dépôt et activer Pages.
+Pousse les fichiers à la racine du dépôt et active GitHub Pages.
